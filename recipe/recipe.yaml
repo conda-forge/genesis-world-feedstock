@@ -2,7 +2,7 @@ schema_version: 1
 
 context:
   name: genesis-world
-  version: "1.4.1"
+  version: "1.4.2"
 
 package:
   name: ${{ name|lower }}
@@ -10,7 +10,7 @@ package:
 
 source:
   url: https://github.com/Genesis-Embodied-AI/genesis-world/archive/refs/tags/v${{ version }}.tar.gz
-  sha256: 7fd88af83cc227eb4be3b0abd43e44c8b5335b769d783012baccaea247762827
+  sha256: 0ffe37cf4c166a32d4abb0d7c20481adcec059f80eed6d7f41a0f3a7ef548b53
   patches:
     # Remove once upstream metadata no longer conflicts with conda-forge's
     # moviepy stack and the optional binary helpers can be redistributed.
@@ -79,7 +79,7 @@ tests:
       pip_check: true
       python_version: ${{ python_min }}.*
   - script:
-      - xvfb-run -a python run_test.py
+      - xvfb-run -a python -X faulthandler run_test.py
       - gs --help
     files:
       recipe:
@@ -87,7 +87,10 @@ tests:
     requirements:
       run:
         - python ${{ python_min }}.*
-        - mesalib
+        # mesa 26.2.3 builds llvmpipe against LLVM 23, which segfaults once
+        # quadrants (LLVM 22) has run a kernel in the same process. Remove when
+        # quadrants and mesa-libgallium use the same LLVM major.
+        - mesalib 26.2.1.*
 
 about:
   homepage: https://genesis-embodied-ai.github.io/
