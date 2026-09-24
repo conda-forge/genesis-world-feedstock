@@ -79,6 +79,8 @@ tests:
       pip_check: true
       python_version: ${{ python_min }}.*
   - script:
+      - xvfb-run -a python -X faulthandler -c "import os; os.environ['LIBGL_ALWAYS_SOFTWARE']='1'; import pyglet; pyglet.window.Window(visible=False); print('DIAG-A GLX OK without genesis')" || echo "DIAG-A crashed $?"
+      - xvfb-run -a python -X faulthandler -c "import os; os.environ['LIBGL_ALWAYS_SOFTWARE']='1'; import genesis as gs; gs.init(backend=gs.cpu, logging_level='warning'); import pyglet; pyglet.window.Window(visible=False); print('DIAG-B GLX OK after gs.init')" || echo "DIAG-B crashed $?"
       - xvfb-run -a python -X faulthandler run_test.py
       - gs --help
     files:
