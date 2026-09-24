@@ -79,7 +79,7 @@ tests:
       pip_check: true
       python_version: ${{ python_min }}.*
   - script:
-      - xvfb-run -a python run_test.py
+      - xvfb-run -a python -X faulthandler run_test.py
       - gs --help
     files:
       recipe:
