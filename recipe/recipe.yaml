@@ -2,7 +2,7 @@ schema_version: 1
 
 context:
   name: genesis-world
-  version: "1.4.2"
+  version: "1.4.3"
 
 package:
   name: ${{ name|lower }}
@@ -10,7 +10,7 @@ package:
 
 source:
   url: https://github.com/Genesis-Embodied-AI/genesis-world/archive/refs/tags/v${{ version }}.tar.gz
-  sha256: 0ffe37cf4c166a32d4abb0d7c20481adcec059f80eed6d7f41a0f3a7ef548b53
+  sha256: f0cccfefd647cbc5d9e59ae996e7d6197a7d2c98666994d4f9365b07b46bb633
   patches:
     # Remove once upstream metadata no longer conflicts with conda-forge's
     # moviepy stack and the optional binary helpers can be redistributed.
@@ -63,7 +63,7 @@ requirements:
     - pysplashsurf >=0.14,<0.15
     - pytorch >=2.8
     - python-tetgen ==0.8.2
-    - quadrants ==1.3.0
+    - quadrants ==1.3.3
     - rtree
     - scikit-image
     - trimesh >=4.8.2
