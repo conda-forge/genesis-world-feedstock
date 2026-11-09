@@ -77,10 +77,10 @@ index 67ef4f2..e17d426 100644
          subterrain_cols = int(morph.subterrain_size[1] / morph.horizontal_scale + gs.EPS) + 1
          heightfield = np.full(
 diff --git a/pyproject.toml b/pyproject.toml
-index 0f75eb2..410ef8a 100644
+index 4808e1e..fd37857 100644
 --- a/pyproject.toml
 +++ b/pyproject.toml
-@@ -150,6 +150,10 @@ gs = "genesis._main:main"
+@@ -152,6 +152,10 @@ gs = "genesis._main:main"
  [tool.setuptools.packages.find]
  where = ["."]
  include = ["genesis", "genesis.*"]
