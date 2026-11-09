@@ -1,0 +1,3 @@
+# genesis-world 1.4.6 requires Python >=3.12 (requires-python in pyproject.toml).
+python_min:
+  - "3.12"
