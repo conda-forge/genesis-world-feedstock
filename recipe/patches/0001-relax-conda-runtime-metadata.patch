@@ -1,67 +1,20 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: conda-forge staged-recipes <conda-forge@users.noreply.github.com>
 Date: Thu, 27 Aug 2026 14:30:00 -0700
-Subject: [PATCH] Relax conda runtime metadata and avoid bundled binaries
+Subject: [PATCH] Relax conda runtime metadata
 
+conda-forge moviepy requires Pillow <11, the optional gs-madrona batch renderer is not packaged for conda-forge, and genesis.utils.hybrid imports matplotlib at module load although upstream lists it only in the dev extra.
 ---
- MANIFEST.in               |  1 -
- genesis/utils/particle.py |  9 ++++++++-
- pyproject.toml            |  9 ++++++---
- 3 files changed, 14 insertions(+), 5 deletions(-)
+ pyproject.toml | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/MANIFEST.in b/MANIFEST.in
-index ca33b94..f87340e 100644
---- a/MANIFEST.in
-+++ b/MANIFEST.in
-@@ -3,4 +3,3 @@ include LICENSE
- recursive-include genesis/assets *
- recursive-include genesis/ext/pyrender/fonts *
- recursive-include genesis/ext/pyrender/shaders *
--include genesis/ext/VolumeSampling
-\ No newline at end of file
-diff --git a/genesis/utils/particle.py b/genesis/utils/particle.py
-index 8c7068a..470f940 100644
---- a/genesis/utils/particle.py
-+++ b/genesis/utils/particle.py
-@@ -92,6 +92,13 @@ def trimesh_to_particles_pbs(mesh, p_size, sampler, pos=(0, 0, 0)):
-     if positions is not None:
-         gs.logger.debug("Sampled particles file (`.ptc`) found in cache.")
-     else:
-+        volume_sampling = os.path.join(miu.get_src_dir(), "ext/VolumeSampling")
-+        if not os.path.exists(volume_sampling):
-+            gs.raise_exception(
-+                f"Physics-based particle sampler '{sampler}' is not available in this conda-forge build. "
-+                "Use the 'random' or 'regular' sampler instead."
-+            )
-+
-         with gs.logger.timer(f"Sampling particles with ~<{sampler}>~ sampler and generating `.ptc` file:"):
-             sdf_res = int(sampler.split("-")[-1])
- 
-@@ -112,7 +119,7 @@ def trimesh_to_particles_pbs(mesh, p_size, sampler, pos=(0, 0, 0)):
- 
-                 # Sample particles
-                 command = (
--                    os.path.join(miu.get_src_dir(), "ext/VolumeSampling"),
-+                    volume_sampling,
-                     "-i",
-                     mesh_path,
-                     "-o",
 diff --git a/pyproject.toml b/pyproject.toml
-index f176ed5..ecbf171 100644
+index de1d3f9..4808e1e 100644
 --- a/pyproject.toml
 +++ b/pyproject.toml
-@@ -42,7 +42,7 @@ dependencies = [
-     # Optional `trimesh` dependency for loading `.dae` mesh files
-     "pycollada",
-     # Used for parsing `.glb` mesh files
--    "pygltflib==1.16.0",
-+    "pygltflib>=1.16.0,<1.17",
-     # Used for decoding Draco-compressed `.glb` mesh files
-     "DracoPy",
-     # Use by `PBD3DEntity.sample` to tetrahedralize a mesh
-@@ -52,8 +52,8 @@ dependencies = [
-     # Used to convert VTK output to numpy when converting volume to particles for PBS
-     "vtk",
+@@ -56,20 +56,22 @@ dependencies = [
+     # * 0.8.0 is the first release with native binaries for each platform, Linux ARM included.
+     "PyGEL3D>=0.8.0",
      # Used here and there to load and export images
 -    # * 11.0 dramatically improves performance when exporting images to PNG
 -    "Pillow>11.0",
@@ -70,8 +23,13 @@ index f176ed5..ecbf171 100644
      # Use to display camera images and export images
      "opencv-python",
      # Use by `RigidGeom.visualize_sdf` to render SDF as level 0 marching cubes
-@@ -68,8 +68,8 @@ dependencies = [
-     "z3-solver<4.15.5.0",
+     "scikit-image",
++    # Imported at module load by `genesis.utils.hybrid`, which `import genesis` loads
++    "matplotlib",
+     # Convex decomposition library
+     "coacd>=1.0.12",
+     # Ray casting used in mesh to height field conversion
+     "rtree",
      # Used for loading raytracing special texture images used by LuisaRender
      "OpenEXR",
 -    # Native batch renderer specifically designed for Genesis
@@ -81,13 +39,3 @@ index f176ed5..ecbf171 100644
      # Used for mesh simplification
      "fast_simplification>=0.1.12",
      # Surface reconstruction library for particle data from SPH simulations
-@@ -154,7 +154,6 @@ genesis = [
-     "assets/*",
-     "ext/pyrender/fonts/*",
-     "ext/pyrender/shaders/*",
--    "ext/VolumeSampling",
- ]
- 
- [tool.black]
--- 
-2.51.0

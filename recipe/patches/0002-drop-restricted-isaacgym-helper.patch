@@ -5,9 +5,9 @@ Subject: [PATCH] Drop restricted IsaacGym helper from package
 
 ---
  LICENSE-vendored-pyrender-urdfpy | 21 +++++++++++++++++++++
- genesis/utils/terrain.py         | 16 ++++++++++++++--
+ genesis/utils/terrain.py         | 14 +++++++++++++-
  pyproject.toml                   |  4 ++++
- 3 files changed, 39 insertions(+), 2 deletions(-)
+ 3 files changed, 38 insertions(+), 1 deletion(-)
  create mode 100644 LICENSE-vendored-pyrender-urdfpy
 
 diff --git a/LICENSE-vendored-pyrender-urdfpy b/LICENSE-vendored-pyrender-urdfpy
@@ -38,17 +38,18 @@ index 0000000..4276f7d
 +OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 +SOFTWARE.
 diff --git a/genesis/utils/terrain.py b/genesis/utils/terrain.py
-index d3758a2..4f5db27 100644
+index 67ef4f2..e17d426 100644
 --- a/genesis/utils/terrain.py
 +++ b/genesis/utils/terrain.py
-@@ -8,13 +8,24 @@ import numpy as np
+@@ -8,7 +8,6 @@ import numpy as np
  import trimesh
  
  import genesis as gs
 -from genesis.ext.isaacgym import terrain_utils as isaacgym_terrain_utils
  from genesis.options.morphs import Terrain
  
- from .mesh import get_gnd_path
+ from .cache import get_gnd_path
+@@ -16,6 +15,18 @@ from .mesh import load_trimesh
  from .misc import tensor_to_array
  
  
@@ -67,7 +68,7 @@ index d3758a2..4f5db27 100644
  def parse_terrain(morph: Terrain, surface):
      """
      Generate mesh (and height field) according to configurations passed by morph.
-@@ -61,6 +72,7 @@ def parse_terrain(morph: Terrain, surface):
+@@ -63,6 +74,7 @@ def parse_terrain(morph: Terrain, surface):
              gs.raise_exception(f"Corrupted cache for terrain heightmap: {gnd_file_path}")
  
      if heightfield is None:
@@ -76,10 +77,10 @@ index d3758a2..4f5db27 100644
          subterrain_cols = int(morph.subterrain_size[1] / morph.horizontal_scale + gs.EPS) + 1
          heightfield = np.full(
 diff --git a/pyproject.toml b/pyproject.toml
-index 8ec5764..529fe6d 100644
+index 4808e1e..fd37857 100644
 --- a/pyproject.toml
 +++ b/pyproject.toml
-@@ -149,6 +149,10 @@ gs = "genesis._main:main"
+@@ -152,6 +152,10 @@ gs = "genesis._main:main"
  [tool.setuptools.packages.find]
  where = ["."]
  include = ["genesis", "genesis.*"]
@@ -90,5 +91,3 @@ index 8ec5764..529fe6d 100644
  
  [tool.setuptools.package-data]
  genesis = [
--- 
-2.51.0
