@@ -2,7 +2,7 @@ schema_version: 1
 
 context:
   name: genesis-world
-  version: "1.4.7"
+  version: "1.5.0"
 
 package:
   name: ${{ name|lower }}
@@ -10,7 +10,7 @@ package:
 
 source:
   url: https://github.com/Genesis-Embodied-AI/genesis-world/archive/refs/tags/v${{ version }}.tar.gz
-  sha256: 466b884f0b21bcf66c10158b20a34302f0793311f12f43131ba596cf9aa3e3e3
+  sha256: 3841578d4790c6f1f33108ef2fbf09dbda260962c54cdb03c1d2c8f68be2c981
   patches:
     # Remove once conda-forge's moviepy accepts Pillow 11, the optional
     # gs-madrona batch renderer is packaged for conda-forge, and upstream lists
