@@ -12,10 +12,8 @@ source:
   url: https://github.com/Genesis-Embodied-AI/genesis-world/archive/refs/tags/v${{ version }}.tar.gz
   sha256: 3841578d4790c6f1f33108ef2fbf09dbda260962c54cdb03c1d2c8f68be2c981
   patches:
-    # Remove once conda-forge's moviepy accepts Pillow 11, the optional
-    # gs-madrona batch renderer is packaged for conda-forge, and upstream lists
-    # matplotlib (imported at load time by genesis.utils.hybrid) as a runtime
-    # dependency.
+    # Remove once the optional gs-madrona batch renderer is packaged for
+    # conda-forge.
     - patches/0001-relax-conda-runtime-metadata.patch
     # Remove once the restricted IsaacGym helper is no longer shipped or is
     # made optional upstream without importing it at module load time.
@@ -40,20 +38,17 @@ requirements:
   run:
     - python >=${{ python_min }},<3.15
     - av
-    - coacd >=1.0.12
+    - coacd >=1.0.14
     - dracopy
     - fast-simplification >=0.1.12
     - freetype-py
     - frozendict
     - igl !=2.6.2
-    # Imported at load time by genesis.utils.hybrid.
-    - matplotlib-base
-    - moviepy >=2.0.0
     - mujoco >=3.2.5
     - numba
     - numpy >=1.26.4
     - openexr-python
-    - pillow >=10,<12
+    - pillow >11.0
     - psutil
     - py-cpuinfo
     - py-opencv
