@@ -3,32 +3,16 @@ From: conda-forge staged-recipes <conda-forge@users.noreply.github.com>
 Date: Thu, 27 Aug 2026 14:30:00 -0700
 Subject: [PATCH] Relax conda runtime metadata
 
-conda-forge moviepy requires Pillow <11, the optional gs-madrona batch renderer is not packaged for conda-forge, and genesis.utils.hybrid imports matplotlib at module load although upstream lists it only in the dev extra.
+The optional gs-madrona batch renderer is not packaged for conda-forge.
 ---
- pyproject.toml | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ pyproject.toml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/pyproject.toml b/pyproject.toml
-index de1d3f9..4808e1e 100644
+index 195765b..68a5d14 100644
 --- a/pyproject.toml
 +++ b/pyproject.toml
-@@ -56,20 +56,22 @@ dependencies = [
-     # * 0.8.0 is the first release with native binaries for each platform, Linux ARM included.
-     "PyGEL3D>=0.8.0",
-     # Used here and there to load and export images
--    # * 11.0 dramatically improves performance when exporting images to PNG
--    "Pillow>11.0",
-+    # Relaxed for conda-forge because current moviepy packages require Pillow <11.
-+    "Pillow>=10,<12",
-     # Use to display camera images and export images
-     "opencv-python",
-     # Use by `RigidGeom.visualize_sdf` to render SDF as level 0 marching cubes
-     "scikit-image",
-+    # Imported at module load by `genesis.utils.hybrid`, which `import genesis` loads
-+    "matplotlib",
-     # Convex decomposition library
-     "coacd>=1.0.12",
-     # Ray casting used in mesh to height field conversion
+@@ -68,8 +68,8 @@ dependencies = [
      "rtree",
      # Used for loading raytracing special texture images used by LuisaRender
      "OpenEXR",
